@@ -1,0 +1,26 @@
+[
+  {
+    "invoiceId": "INV-A-001",
+    "pattern": "Leistungsdatum",
+    "meaning": "serviceDate",
+    "decision": "approved"
+  },
+  {
+    "invoiceId": "INV-A-003",
+    "pattern": "Referenz: Lieferung Januar",
+    "meaning": "Match with PO-A-051",
+    "decision": "approved"
+  },
+  {
+    "invoiceId": "INV-B-001",
+    "pattern": "MwSt. inkl.",
+    "meaning": "Prices include VAT",
+    "decision": "approved"
+  },
+  {
+    "invoiceId": "INV-C-001",
+    "pattern": "Skonto",
+    "meaning": "Early payment discount terms",
+    "decision": "approved"
+  }
+]

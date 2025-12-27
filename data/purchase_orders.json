@@ -1,0 +1,62 @@
+[
+  {
+    "poId": "PO-A-050",
+    "vendor": "Supplier GmbH",
+    "orderDate": "05.01.2024",
+    "currency": "EUR",
+    "items": [
+      {
+        "sku": "WIDGET-001",
+        "description": "Widget",
+        "qtyOrdered": 100,
+        "unitPrice": 25.0
+      }
+    ],
+    "netTotal": 2500.0
+  },
+  {
+    "poId": "PO-A-051",
+    "vendor": "Supplier GmbH",
+    "orderDate": "18.01.2024",
+    "currency": "EUR",
+    "items": [
+      {
+        "sku": "WIDGET-002",
+        "description": "Widget Pro",
+        "qtyOrdered": 20,
+        "unitPrice": 25.0
+      }
+    ],
+    "netTotal": 500.0
+  },
+  {
+    "poId": "PO-B-110",
+    "vendor": "Parts AG",
+    "orderDate": "01.02.2024",
+    "currency": "EUR",
+    "items": [
+      {
+        "sku": "BOLT-99",
+        "description": "Bolts",
+        "qtyOrdered": 200,
+        "unitPrice": 10.0
+      }
+    ],
+    "netTotal": 2000.0
+  },
+  {
+    "poId": "PO-C-900",
+    "vendor": "Freight & Co",
+    "orderDate": "25.02.2024",
+    "currency": "EUR",
+    "items": [
+      {
+        "sku": "FREIGHT",
+        "description": "Transport charges",
+        "qtyOrdered": 1,
+        "unitPrice": 1000.0
+      }
+    ],
+    "netTotal": 1000.0
+  }
+]

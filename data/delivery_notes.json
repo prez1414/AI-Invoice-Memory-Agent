@@ -1,0 +1,38 @@
+[
+  {
+    "deliveryNoteId": "DN-A-1001",
+    "vendor": "Supplier GmbH",
+    "relatedPO": "PO-A-050",
+    "deliveryDate": "10.01.2024",
+    "items": [
+      {
+        "sku": "WIDGET-001",
+        "qtyDelivered": 100
+      }
+    ]
+  },
+  {
+    "deliveryNoteId": "DN-A-1002",
+    "vendor": "Supplier GmbH",
+    "relatedPO": "PO-A-050",
+    "deliveryDate": "16.01.2024",
+    "items": [
+      {
+        "sku": "WIDGET-001",
+        "qtyDelivered": 95
+      }
+    ]
+  },
+  {
+    "deliveryNoteId": "DN-A-2001",
+    "vendor": "Supplier GmbH",
+    "relatedPO": "PO-A-051",
+    "deliveryDate": "20.01.2024",
+    "items": [
+      {
+        "sku": "WIDGET-002",
+        "qtyDelivered": 20
+      }
+    ]
+  }
+]
