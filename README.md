@@ -1,50 +1,122 @@
-                                                       AI Invoice Memory Agent
-                                            Memory-Driven Learning Layer for Invoice Automation
+                                                                                       AI Invoice Memory Agent
+                                                                          Memory-Driven Learning Layer for Invoice Automation
                                          
-     
-**Tech Stack**
-     TypeScript (strict mode)
-     Node.js
-     SQLite (better-sqlite3)
 
 
+                    Tech Stack
 
-No external ML or AI libraries 
- 1. **Overview**
+                    TypeScript (strict mode)
+
+                    Node.js
+
+                    SQLite (better-sqlite3)
+
+                    
+1. **Overview**
+
 This project implements a memory-driven learning layer for invoice automation systems.
-Instead of treating every invoice as a new, isolated document, the system remembers past human corrections and vendor-specific patterns and reuses them to improve automation quality over time.
-The focus of this assignment is not OCR or extraction accuracy.
-All invoice data is assumed to be pre-extracted.
-The goal is to design a system that learns, reasons, and improves safely.                                        
+Instead of treating each invoice as a standalone document, the system retains past human corrections and vendor-specific patterns and applies them to future invoices to improve automation quality over time.
+The assignment focuses on agent reasoning, memory, and learning behavior, not OCR or extraction accuracy. All invoice data is assumed to be pre-extracted.
 
+2.**Problem Statement**
 
-2. **Problem Statement**
-Organizations process hundreds of invoices daily.
-Many corrections repeat across invoices, such as:
-Vendor-specific field labels
-VAT handling differences
-Recurring quantity or pricing mismatchesPayment terms like Skonto
-Traditional systems discard these corrections after manual review.
-As a result, the same mistakes repeat, increasing human workload.
-This project solves that problem by introducing a persistent memory layer that learns from past corrections and applies them to future invoices.
+In real-world invoice processing, many issues recur across invoices, such as:
+Vendor-specific terminology (e.g., alternative field labels)
+VAT inclusion or exclusion patterns
+Repeated quantity or pricing discrepancies
+Payment terms such as Skonto
+Traditional systems discard human corrections after review, resulting in repeated manual effort.
+This project addresses that limitation by introducing a persistent memory layer that learns from previous corrections and reuses them safely.
 
-3. **Architecture**
+3. **Solution Summary**
 
+The system introduces a memory layer that performs four core actions:
+Recall relevant past learnings for a given invoice
+Apply those learnings cautiously based on confidence
+Decide whether to auto-correct or escalate for human review
+Learn from new human feedback and update memory
+
+Key design principles:
+
+Conservative automation (no risky auto-application)
+
+Confidence-based reinforcement
+
+Full explainability and auditability
+
+Persistent learning using SQLite
+
+No machine-learning model training (heuristics only)
+
+4. **Architecture**
+   
 src/
 ├── agent/
-│   ├── recall.ts           # Retrieves relevant memory
-│   ├── applyAndDecide.ts   # Applies memory & makes decisions
-│   └── learn.ts            # Learns from human corrections
+│   ├── recall.ts           # Memory retrieval logic
+│   ├── applyAndDecide.ts   # Decision and escalation logic
+│   └── learn.ts            # Learning from human corrections
 ├── memory/
 │   └── memoryStore.ts      # SQLite persistence layer
 ├── data/
-│   └── dataLoader.ts       # Loads sample PDF data
+│   └── dataLoader.ts       # Loads provided sample data
 ├── demo/
-│   ├── runDemo.ts          # Basic demo
-│   └── runPdfDataDemo.ts   # PDF sample data demo
+│   ├── runDemo.ts          # Basic demonstration
+│   └── runPdfDataDemo.ts   # Full PDF data demo
 └── index.ts
 
-4. **Sample Data Used**
+
+5. **Memory Types Implemented**
+   
+1. Vendor Memory
+Stores vendor-specific patterns and recurring behaviors.
+Example:
+Supplier GmbH → "Leistungsdatum" corresponds to serviceDate
+
+2. Correction Memory
+Learns from repeated human corrections applied across invoices.
+Example:
+"MwSt. inkl." → Prices include VAT
+
+3. Resolution Memory
+Tracks how discrepancies were resolved:
+Approved corrections increase confidence
+Rejected corrections reduce confidence
+This prevents incorrect learnings from dominating system behavior.
+
+6. **Decision Logic** 
+
+     For each invoice, the system executes the following pipeline:
+
+A. Recall Memory
+Matches vendor name and raw invoice text against stored memory.
+Apply Memory
+Proposes corrections only when confidence is sufficient.
+
+B. Decide
+Auto-accept if confidence crosses a safe threshold
+Otherwise escalate for human review
+
+C. Learn
+Updates memory based on human approval or rejection.
+
+D. Audit
+Provides reasoning and confidence for every decision.
+Low-confidence memory is never auto-applied.
+
+7. **Output Format**
+For each invoice, the system produces an explainable JSON output:
+
+{
+  "normalizedInvoice": {},
+  "proposedCorrections": [],
+  "requiresHumanReview": true,
+  "reasoning": "Explanation of decision",
+  "confidenceScore": 0.0,
+  "auditTrail": []
+}
+
+8. **Sample Data Used** 
+
 All sample data provided in the assignment PDF is used:
 
 data/
@@ -53,95 +125,44 @@ data/
 ├── purchase_orders.json
 └── delivery_notes.json
 
-Invoice data is processed sequentially
+Invoices are processed sequentially
 Human corrections are applied where available
 Purchase orders and delivery notes are loaded to support extensibility
 
-5. **Memory Types Implemented**
-       a. Vendor Memory
-                 Stores vendor-specific patterns and behaviors.
-                 Example: Supplier GmbH → "Leistungsdatum" means serviceDate
+9. **Demo: Learning Over Time** 
+How to run the demo
 
+npm run build
+node dist/demo/runPdfDataDemo.js
 
+Q. What the demo demonstrates
 
-     b. Correction Memory
-                Learns from repeated human corrections across invoices.
-                 Example:  "MwSt. inkl." → Prices include VAT
-                    
+A. Initial run with no memory → human review required
+B. Human correction applied → memory stored
+C. Subsequent runs → memory recall
+D. Confidence increases over time
+E. Fewer flags and smarter suggestions
+F. Learning persists across executions via SQLite
+G. Running the demo multiple times clearly shows learning over time, which is the primary objective of this assignment.
 
-    c.Resolution Memory
-                Tracks how discrepancies were resolved:
+10. **Persistence** 
 
-                Approved corrections increase confidence
+SQLite database: memory.db
+Memory persists across application restarts
+Enables long-term learning without retraining
 
-                Rejected corrections reduce confidence
+Tech Stack
 
-                This prevents incorrect learnings from dominating the system.
+TypeScript (strict mode)
 
+Node.js
 
-6. **Decision Logic**
-                  For each invoice, the system follows this pipeline:
+SQLite (better-sqlite3)
 
-a. Recall Memory
-Match vendor name and raw invoice text against stored memory
+No external ML frameworks
 
-b. Apply Memory
-Suggest corrections only if confidence is sufficient
+11. **Conclusion** 
 
-c. Decide
-Auto-accept when confidence crosses a safe threshold
-Otherwise escalate for human review
-
-c. Learn
-Update memory based on human approval or rejection
-
-d. Audit
-Provide reasoning and confidence for every decision
-    
-                     Low-confidence memory is never auto-applied.
-
-
-7. **Output Format**
-
-For each invoice, the system produces an explainable JSON output:
-
-{
-  "normalizedInvoice": { },
-  "proposedCorrections": [],
-  "requiresHumanReview": true,
-  "reasoning": "Explanation of why memory was or was not applied",
-  "confidenceScore": 0.0,
-  "auditTrail": []
-}
-
-This ensures transparency and auditability.
-
-
-8. **How to run the demo:** 
-                              npm run build
-                              node dist/demo/runPdfDataDemo.js 
-
-What the demo demonstrates:
-
-a. First invoice → no memory → human review required
-
-b. Human correction applied → memory updated
-
-c. Subsequent invoices → memory recalled
-
-d. Confidence increases across runs
-
-e. Fewer flags and smarter suggestions over time
-
-f. Memory persists across executions via SQLite
-
-g. Running the demo multiple times clearly shows learning over time, which is the core requirement of this assignment.
-
-
-9. Conclusion
-
-This project demonstrates a safe, explainable, and persistent learning agent for invoice automation.
-By remembering past human decisions and applying them cautiously, the system improves automation rates while avoiding risky behavior.
-
-The implementation fulfills all requirements of the assignment and demonstrates learning over time using the provided sample data.
-                                                                
+This project demonstrates a safe, explainable, and persistent memory-driven AI agent for invoice automation.
+By retaining past human decisions and applying them cautiously, the system improves automation quality while preventing incorrect learning.
+The implementation fulfills all requirements of the internship assessment and demonstrates learning over time using the provided sample data.
